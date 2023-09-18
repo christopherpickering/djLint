@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <title>Django JavaScript Tests</title>
     <link rel="stylesheet" href="../node_modules/qunit/qunit/qunit.css">
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="qunit"></div>
-    <div id="qunit-fixture">
-    </div>
+    <div id="qunit-fixture"></div>
     <script type="text/html" id="result-table">
         <form id="changelist-form">
             <button type="submit" class="button" name="index" value="0">Go</button>
@@ -85,14 +83,11 @@
     </script>
     <script type="text/html" id="nav-sidebar-filter">
       <nav class="sticky" id="nav-sidebar">
-        <input type="search" id="nav-filter"
-               placeholder="Start typing to filter..."
-               aria-label="Filter navigation items">
+        <input type="search" id="nav-filter" placeholder="Start typing to filter..." aria-label="Filter navigation items">
         <div class="app-auth module current-app">
           <table>
             <caption>
-              <a href="/admin/auth/" class="section"
-                 title="Models in the Authentication and Authorization application">
+              <a href="/admin/auth/" class="section" title="Models in the Authentication and Authorization application">
                     Authentication and Authorization
               </a>
             </caption>
@@ -110,56 +105,55 @@
         </div>
       </nav>
     </script>
-
     <script src="../node_modules/qunit/qunit/qunit.js"></script>
-
     <script src='../django/contrib/admin/static/admin/js/vendor/xregexp/xregexp.min.js'></script>
     <script src='../django/contrib/admin/static/admin/js/vendor/jquery/jquery.min.js'></script>
     <script src='../django/contrib/admin/static/admin/js/jquery.init.js'></script>
     <script src='./admin/jsi18n-mocks.test.js'></script>
-
     <script src='../django/contrib/admin/static/admin/js/core.js' data-cover></script>
     <script src='./admin/core.test.js'></script>
-
-    <script src='../django/contrib/admin/static/admin/js/nav_sidebar.js' data-cover></script>
+    <script src='../django/contrib/admin/static/admin/js/nav_sidebar.js'
+            data-cover></script>
     <script src='./admin/navigation.test.js'></script>
-
-    <script src='../django/contrib/admin/static/admin/js/admin/RelatedObjectLookups.js' data-cover></script>
-
+    <script src='../django/contrib/admin/static/admin/js/admin/RelatedObjectLookups.js'
+            data-cover></script>
     <script src='./admin/DateTimeShortcuts.test.js'></script>
     <script src='../django/contrib/admin/static/admin/js/calendar.js' data-cover></script>
-    <script src='../django/contrib/admin/static/admin/js/admin/DateTimeShortcuts.js' data-cover></script>
-
+    <script src='../django/contrib/admin/static/admin/js/admin/DateTimeShortcuts.js'
+            data-cover></script>
     <script src='../django/contrib/admin/static/admin/js/actions.js' data-cover></script>
     <script src='./admin/actions.test.js'></script>
-
     <script src='../django/contrib/admin/static/admin/js/SelectBox.js' data-cover></script>
     <script src='./admin/SelectBox.test.js'></script>
-
-    <script src='../django/contrib/admin/static/admin/js/SelectFilter2.js' data-cover></script>
+    <script src='../django/contrib/admin/static/admin/js/SelectFilter2.js'
+            data-cover></script>
     <script src='./admin/SelectFilter2.test.js'></script>
-
     <script src='../django/contrib/admin/static/admin/js/inlines.js' data-cover></script>
     <script src='./admin/inlines.test.js'></script>
-
     <script src='../django/contrib/admin/static/admin/js/actions.js' data-cover></script>
     <script src='../django/contrib/admin/static/admin/js/collapse.js' data-cover></script>
-    <script src='../django/contrib/admin/static/admin/js/prepopulate.js' data-cover></script>
+    <script src='../django/contrib/admin/static/admin/js/prepopulate.js'
+            data-cover></script>
     <script src='../django/contrib/admin/static/admin/js/urlify.js' data-cover></script>
     <script src='./admin/URLify.test.js'></script>
-
     <div id="id_point_map" style="display:none;">
-        <textarea id="id_point" name="point" class="vSerializedField required"
-                  style="display:none;" rows="10" cols="150"
-        >{&quot;type&quot;: &quot;Point&quot;, &quot;coordinates&quot;: [7.8177, 47.397]}</textarea>
+      <textarea id="id_point"
+                name="point"
+                class="vSerializedField required"
+                style="display:none"
+                rows="10"
+                cols="150">{&quot;type&quot;: &quot;Point&quot;, &quot;coordinates&quot;: [7.8177, 47.397]}</textarea>
     </div>
     <div id="id_multipolygon_map" style="display:none;">
-        <textarea id="id_multipolygon" name="multipolygon" class="vSerializedField required"
-                  style="display:none;" rows="10" cols="150"></textarea>
+      <textarea id="id_multipolygon"
+                name="multipolygon"
+                class="vSerializedField required"
+                style="display:none"
+                rows="10"
+                cols="150"></textarea>
     </div>
     <script src='https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js'></script>
     <script src='../django/contrib/gis/static/gis/js/OLMapWidget.js' data-cover></script>
     <script src='./gis/mapwidget.test.js'></script>
-
-</body>
+  </body>
 </html>

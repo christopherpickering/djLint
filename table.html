@@ -9,14 +9,19 @@
   </tr>
 {% endif %}
 {% for field, errors in fields %}
-  <tr{% with classes=field.css_classes %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
-    <th>{% if field.label %}{{ field.label_tag }}{% endif %}</th>
+  <tr {% with classes=field.css_classes %}
+      {% if classes %}class="{{ classes }}"{% endif %}
+      {% endwith %}>
+    <th>
+      {% if field.label %}{{ field.label_tag }}{% endif %}
+    </th>
     <td>
       {{ errors }}
       {{ field }}
       {% if field.help_text %}
         <br>
-        <span class="helptext"{% if field.id_for_label %} id="{{ field.id_for_label}}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
+        <span class="helptext"
+              {% if field.id_for_label %}id="{{ field.id_for_label }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
       {% endif %}
       {% if forloop.last %}
         {% for field in hidden_fields %}{{ field }}{% endfor %}

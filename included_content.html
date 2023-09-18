@@ -1,10 +1,8 @@
 {% extends "included_base.html" %}
-
 {% block content %}
   content
   {{ block.super }}
 {% endblock %}
-
 {% block error_here %}
   error here
   {% url "nonexistent_url" %}
