@@ -1,9 +1,7 @@
 {% load i18n wagtailadmin_tags %}
 {% include "wagtailadmin/shared/header.html" with title=action_verbose icon="clipboard-list" %}
-
 <div class="nice-padding">
     {% include "wagtailadmin/shared/non_field_errors.html" %}
-
     <form action="{{ submit_url }}" method="POST" novalidate>
         {% csrf_token %}
         <ul class="fields">
@@ -15,14 +13,10 @@
                 {% endif %}
             {% endfor %}
             <li>
-                <button
-                    type="submit"
-                    class="button button-longrunning"
-                    data-controller="w-progress"
-                    data-action="w-progress#activate"
-                >
-                    {% icon name="spinner" %}{{ action_verbose }}
-                </button>
+                <button type="submit"
+                        class="button button-longrunning"
+                        data-controller="w-progress"
+                        data-action="w-progress#activate">{% icon name="spinner" %}{{ action_verbose }}</button>
             </li>
         </ul>
     </form>

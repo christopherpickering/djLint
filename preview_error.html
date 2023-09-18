@@ -1,8 +1,8 @@
 {% extends 'wagtailadmin/admin_base.html' %}
 {% load i18n %}
-
-{% block titletag %}{% trans 'Preview not available' %}{% endblock %}
-
+{% block titletag %}
+    {% trans 'Preview not available' %}
+{% endblock %}
 {% block furniture %}
     <div class="preview-error">
         <header class="preview-error__header">
@@ -17,7 +17,6 @@
         </p>
     </div>
 {% endblock %}
-
 {# Avoid loading all of Wagtail’s JavaScript for a fully static page. #}
 {% block js %}
 {% endblock %}

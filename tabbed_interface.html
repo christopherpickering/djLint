@@ -1,10 +1,10 @@
 {% load wagtailadmin_tags i18n %}
-
 {% if self.help_text %}
     {% help_block status="info" %}{{ self.help_text }}{% endhelp_block %}
 {% endif %}
-
-<div class="w-tabs" data-tabs {% include "wagtailadmin/shared/attrs.html" with attrs=self.attrs %}>
+<div class="w-tabs"
+     data-tabs
+     {% include "wagtailadmin/shared/attrs.html" with attrs=self.attrs %}>
     <div class="w-tabs__wrapper">
         <div role="tablist" class="w-tabs__list">
             {% for child, identifier in self.visible_children_with_identifiers %}
@@ -15,17 +15,14 @@
             {% endfor %}
         </div>
     </div>
-
     <div class="tab-content">
         {% for child, identifier in self.visible_children_with_identifiers %}
             {% if child.show_panel_furniture %}
-                <section
-                    id="tab-{{ identifier }}"
-                    class="w-tabs__panel {{ child.classes|join:" " }}"
-                    role="tabpanel"
-                    aria-labelledby="tab-label-{{ identifier }}"
-                    hidden
-                >
+                <section id="tab-{{ identifier }}"
+                         class="w-tabs__panel {{ child.classes|join:" " }}"
+                         role="tabpanel"
+                         aria-labelledby="tab-label-{{ identifier }}"
+                         hidden>
                     {{ child.render_html }}
                 </section>
             {% else %}

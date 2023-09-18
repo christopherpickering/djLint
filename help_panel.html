@@ -1,6 +1,4 @@
 <fieldset>
-    {% if self.heading %}
-        <legend class="w-sr-only">{{ self.heading }}</legend>
-    {% endif %}
+    {% if self.heading %}<legend class="w-sr-only">{{ self.heading }}</legend>{% endif %}
     <div class="{{ self.classname }}">{{ self.content|safe }}</div>
 </fieldset>

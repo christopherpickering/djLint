@@ -1,26 +1,15 @@
 {% extends 'wagtailadmin/reports/base_report.html' %}
 {% load i18n wagtailadmin_tags %}
-
 {% block results %}
     {% if object_list %}
         <table class="listing">
             <thead>
                 <tr>
-                    <th class="title">
-                        {% trans 'Name' %}
-                    </th>
-                    <th>
-                        {% trans 'Type' %}
-                    </th>
-                    <th>
-                        {% trans 'Action' %}
-                    </th>
-                    <th>
-                        {% trans 'User' %}
-                    </th>
-                    <th class="updated">
-                        {% trans 'Date / Time' %}
-                    </th>
+                    <th class="title">{% trans 'Name' %}</th>
+                    <th>{% trans 'Type' %}</th>
+                    <th>{% trans 'Action' %}</th>
+                    <th>{% trans 'User' %}</th>
+                    <th class="updated">{% trans 'Date / Time' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,15 +22,9 @@
                                 {{ entry.label }}
                             {% endif %}
                         </td>
-                        <td>
-                            {{ entry.content_type|format_content_type }}
-                        </td>
-                        <td>
-                            {{ entry.message }}
-                        </td>
-                        <td>
-                            {% include "wagtailadmin/shared/user_avatar.html" with user=entry.user username=entry.user_display_name %}
-                        </td>
+                        <td>{{ entry.content_type|format_content_type }}</td>
+                        <td>{{ entry.message }}</td>
+                        <td>{% include "wagtailadmin/shared/user_avatar.html" with user=entry.user username=entry.user_display_name %}</td>
                         <td class="updated">{% human_readable_date entry.timestamp %}</td>
                     </tr>
                 {% endfor %}
@@ -51,7 +34,6 @@
         <p>{% trans "No log entries found." %}</p>
     {% endif %}
 {% endblock %}
-
 {% block no_results %}
     <p>{% trans "No log entries found." %}</p>
 {% endblock %}

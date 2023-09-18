@@ -1,6 +1,5 @@
 {% extends "wagtailadmin/generic/base.html" %}
 {% load i18n wagtailadmin_tags %}
-
 {% block main_content %}
     {% block fields_output %}
         {% if fields %}
@@ -19,10 +18,8 @@
         {% endif %}
     {% endblock %}
 {% endblock %}
-
 {% block content %}
     {{ block.super }}
-
     {% block footer %}
         {% if edit_url or delete_url %}
             <footer class="footer">

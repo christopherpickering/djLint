@@ -10,25 +10,21 @@
                 <a href="{% url 'wagtailadmin_choose_page' %}{% querystring p=None parent_page_id=None %}">{% trans "Internal link" %}</a>
             {% endif %}
         {% endif %}
-
         {% if current == 'external' %}
             | <b>{% trans "External link" %}</b>
         {% elif allow_external_link %}
             | <a href="{% url 'wagtailadmin_choose_page_external_link' %}{% querystring p=None parent_page_id=parent_page_id %}">{% trans "External link" %}</a>
         {% endif %}
-
         {% if current == 'email' %}
             | <b>{% trans "Email link" %}</b>
         {% elif allow_email_link %}
             | <a href="{% url 'wagtailadmin_choose_page_email_link' %}{% querystring p=None parent_page_id=parent_page_id %}">{% trans "Email link" %}</a>
         {% endif %}
-
         {% if current == 'phone' %}
             | <b>{% trans "Phone link" %}</b>
         {% elif allow_phone_link %}
             | <a href="{% url 'wagtailadmin_choose_page_phone_link' %}{% querystring p=None parent_page_id=parent_page_id %}">{% trans "Phone link" %}</a>
         {% endif %}
-
         {% if current == 'anchor' %}
             | <b>{% trans "Anchor link" %}</b>
         {% elif allow_anchor_link %}

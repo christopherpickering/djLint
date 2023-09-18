@@ -15,8 +15,10 @@
     {% if label_text %}
         <span class="w-mr-1 {% if sr_only_label %}w-sr-only{% endif %}">{{ label_text }}</span>
     {% endif %}
-    <input type="checkbox" {% if checked %}checked{% endif %} data-controller="w-action" data-action="click->w-action#post" data-w-action-url-value="{{ data_url }}">
-    <span class="switch__toggle">
-        {% icon name="check" classname="switch__icon" %}
-    </span>
+    <input type="checkbox"
+           {% if checked %}checked{% endif %}
+           data-controller="w-action"
+           data-action="click->w-action#post"
+           data-w-action-url-value="{{ data_url }}">
+    <span class="switch__toggle">{% icon name="check" classname="switch__icon" %}</span>
 </label>

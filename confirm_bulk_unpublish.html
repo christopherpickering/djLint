@@ -1,20 +1,25 @@
 {% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
 {% load i18n %}
-
-{% block titletag %}{% blocktrans trimmed count counter=items|length %}Unpublish 1 page {% plural %}Unpublish {{ counter }} pages{% endblocktrans %}{% endblock %}
-
+{% block titletag %}
+    {% blocktrans trimmed count counter=items|length %}
+        Unpublish 1 page
+    {% plural %}
+        Unpublish {{ counter }} pages
+    {% endblocktrans %}
+{% endblock %}
 {% block header %}
     {% trans "Unpublish" as unpublish_str %}
     {% include "wagtailadmin/shared/header.html" with title=unpublish_str icon="doc-empty-inverse" %}
 {% endblock header %}
-
 {% block items_with_access %}
     {% if items %}
         <p>{% trans "Are you sure you want to unpublish these pages?" %}</p>
         <ul>
             {% for page in items %}
                 <li>
-                    <a href="{% url 'wagtailadmin_pages:edit' page.item.id %}" target="_blank" rel="noreferrer">{{ page.item.get_admin_display_title }}</a>
+                    <a href="{% url 'wagtailadmin_pages:edit' page.item.id %}"
+                       target="_blank"
+                       rel="noreferrer">{{ page.item.get_admin_display_title }}</a>
                     <p>
                         {% if page.live_descendant_count %}
                             {% blocktrans trimmed count counter=page.live_descendant_count %}
@@ -29,14 +34,14 @@
         </ul>
     {% endif %}
 {% endblock items_with_access %}
-
 {% block items_with_no_access %}
-
-    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to unpublish this page{% plural %}You don't have permission to unpublish these pages{% endblocktrans %}
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}
+        You don't have permission to unpublish this page
+    {% plural %}
+        You don't have permission to unpublish these pages
+    {% endblocktrans %}
     {% include './list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
-
 {% endblock items_with_no_access %}
-
 {% block form_section %}
     {% if items %}
         {% trans 'Yes, unpublish' as action_button_text %}

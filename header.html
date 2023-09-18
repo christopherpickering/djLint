@@ -37,53 +37,50 @@
                         {% if icon %}
                             {% icon classname="w-header__glyph" name=icon %}
                         {% elif avatar %}
-                            <div class="w-header__glyph avatar large"><img src="{{ avatar }}" alt="" /></div>
+                            <div class="w-header__glyph avatar large">
+                                <img src="{{ avatar }}" alt="" />
+                            </div>
                         {% endif %}
-                        {{ title }}{% if subtitle %} <span class="w-header__subtitle">{{ subtitle }}</span>{% endif %}
+                        {{ title }}
+                        {% if subtitle %}<span class="w-header__subtitle">{{ subtitle }}</span>{% endif %}
                     </h1>
                 {% endif %}
                 {% if description %}<div class="w-header__description">{{ description }}</div>{% endif %}
             </div>
             {% if search_url %}
-                <form
-                    class="col search-form"
-                    action="{% url search_url %}{% if query_parameters %}?{{ query_parameters }}{% endif %}"
-                    method="get"
-                    novalidate
-                    role="search"
-                    {% if not search_disable_async %}
-                        data-controller="w-swap"
-                        data-action="change->w-swap#searchLazy input->w-swap#searchLazy"
-                        {% if search_results_url %}data-w-swap-src-value="{{ search_results_url }}"{% endif %}
-                        {% if search_target %}data-w-swap-target-value="{{ search_target }}"{% endif %}
-                    {% endif %}
-                >
-                    {% for field in search_form %}
-                        {% include "wagtailadmin/shared/field.html" with field=field classname="w-mb-0 -w-mt-2.5" sr_only_label=True icon="search" %}
-                    {% endfor %}
-                    {% comment %}Add an initial disabled & hidden submit button so that pressing 'enter' will not submit form. Reload not required as the content is dynamically loaded.{% endcomment %}
-                    <div class="visuallyhidden"><input disabled type="submit" aria-hidden="true"/></div>
-                    <div class="submit visuallyhidden"><input type="submit" value="Search" class="button" /></div>
-                </form>
-            {% elif search %}
-                {{ search }}
-            {% endif %}
-        </div>
-        <div class="{% block right_column_classname %}right{% endblock %}">
-            {% block right_column %}
-                {% if action_url %}
-                    <div class="actionbutton">
-                        {{ base_actions }}
-                        {% with action_icon|default:'plus' as action_icon_name %}
-                            <a href="{{ action_url }}" class="button bicolor button--icon">{% icon name=action_icon_name wrapped=1 %}{{ action_text }}</a>
-                        {% endwith %}
-                    </div>
+                <form class="col search-form" action="{% url search_url %}{% if query_parameters %}?{{ query_parameters }}{% endif %}" method="get" novalidate role="search" {% if not search_disable_async %} data-controller="w-swap" data-action="change->w-swap#searchLazy input->w-swap#searchLazy"
+                    {% if search_results_url %}data-w-swap-src-value="{{ search_results_url }}"{% endif %}
+                    {% if search_target %}data-w-swap-target-value="{{ search_target }}"{% endif %}
                 {% endif %}
-            {% endblock %}
-            {% if extra_actions %}
-                {{ extra_actions }}
-            {% endif %}
-        </div>
+                >
+                {% for field in search_form %}
+                    {% include "wagtailadmin/shared/field.html" with field=field classname="w-mb-0 -w-mt-2.5" sr_only_label=True icon="search" %}
+                {% endfor %}
+                {% comment %}Add an initial disabled & hidden submit button so that pressing 'enter' will not submit form. Reload not required as the content is dynamically loaded.{% endcomment %}
+                <div class="visuallyhidden">
+                    <input disabled type="submit" aria-hidden="true" />
+                </div>
+                <div class="submit visuallyhidden">
+                    <input type="submit" value="Search" class="button" />
+                </div>
+            </form>
+        {% elif search %}
+            {{ search }}
+        {% endif %}
     </div>
-    {% block extra_rows %}{{ extra_rows }}{% endblock %}
+    <div class="{% block right_column_classname %}right{% endblock %}">
+        {% block right_column %}
+            {% if action_url %}
+                <div class="actionbutton">
+                    {{ base_actions }}
+                    {% with action_icon|default:'plus' as action_icon_name %}
+                        <a href="{{ action_url }}" class="button bicolor button--icon">{% icon name=action_icon_name wrapped=1 %}{{ action_text }}</a>
+                    {% endwith %}
+                </div>
+            {% endif %}
+        {% endblock %}
+        {% if extra_actions %}{{ extra_actions }}{% endif %}
+    </div>
+</div>
+{% block extra_rows %}{{ extra_rows }}{% endblock %}
 </header>

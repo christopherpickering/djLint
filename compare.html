@@ -1,31 +1,27 @@
 {% extends "wagtailadmin/base.html" %}
 {% load i18n wagtailadmin_tags %}
-
-{% block titletag %}{% blocktrans trimmed with title=page_subtitle %}Comparing {{ title }}{% endblocktrans %}{% endblock %}
-
+{% block titletag %}
+    {% blocktrans trimmed with title=page_subtitle %}
+        Comparing {{ title }}
+    {% endblocktrans %}
+{% endblock %}
 {% block content %}
     {% trans "Comparing" as comparing_str %}
     {% include "wagtailadmin/shared/header.html" with title=comparing_str subtitle=page_subtitle icon=header_icon %}
-
     <div class="nice-padding">
-
         <p>
             <a href="{{ history_url }}" class="button button-small">{{ history_label|capfirst }}</a>
             <a href="{{ edit_url }}" class="button button-small button-secondary">{{ edit_label|capfirst }}</a>
         </p>
-
-
         <table class="listing">
             <col width="15%" />
             <col />
-
             <thead>
                 <tr>
                     <th>{% trans "Fields" %}</th>
                     <th>{% trans "Changes" %}</th>
                 </tr>
             </thead>
-
             <tbody>
                 {% for comp in comparison %}
                     <tr>
@@ -60,11 +56,12 @@
                                                 </div>
                                             {% endif %}
                                         {% endwith %}
-
                                         <dl class="comparison__list">
                                             {% for field_comp in child_comp.get_field_comparisons %}
                                                 <dt>{{ field_comp.field_label }}</dt>
-                                                <dd>{{ field_comp.htmldiff }}</dd>
+                                                <dd>
+                                                    {{ field_comp.htmldiff }}
+                                                </dd>
                                             {% endfor %}
                                         </dl>
                                     </div>

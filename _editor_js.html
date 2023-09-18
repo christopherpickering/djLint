@@ -1,9 +1,7 @@
 {% load wagtailadmin_tags %}
-
 {% comment %}
     JavaScript declarations to be included on the 'create page' and 'edit page' views
 {% endcomment %}
-
 <script>
     window.chooserUrls = {
         'pageChooser': '{% url "wagtailadmin_choose_page" %}',
@@ -13,7 +11,6 @@
         'anchorLinkChooser': '{% url "wagtailadmin_choose_page_anchor_link" %}',
     };
 </script>
-
 <script src="{% versioned_static 'wagtailadmin/js/comments.js' %}"></script>
 <script src="{% versioned_static 'wagtailadmin/js/vendor/rangy-core.js' %}"></script>
 <script src="{% versioned_static 'wagtailadmin/js/vendor/mousetrap.min.js' %}"></script>

@@ -1,34 +1,27 @@
 {% extends 'wagtailadmin/shared/headers/slim_header.html' %}
 {% load wagtailadmin_tags i18n %}
-
 {% block header_content %}
     {% page_breadcrumbs page 'wagtailadmin_explore' url_root_name='wagtailadmin_explore_root' page_perms=page_perms %}
-
     <h1 class="w-sr-only">
-        {% blocktrans trimmed with title=page.get_admin_display_title page_type=content_type.model_class.get_verbose_name %}Editing {{ page_type }} {{ title }}{% endblocktrans %}
+        {% blocktrans trimmed with title=page.get_admin_display_title page_type=content_type.model_class.get_verbose_name %}
+            Editing {{ page_type }} {{ title }}
+        {% endblocktrans %}
     </h1>
-
     {# Actions divider #}
     <div class="w-w-px w-h-[30px] w-ml-auto sm:w-ml-0 w-bg-border-furniture"></div>
     {# Page actions dropdown #}
     {% page_header_buttons page page_perms=page_perms %}
 {% endblock %}
-
 {% block actions %}
     {{ block.super }}
-
     {# Page history #}
     {% if page.get_latest_revision %}
         <a href="{% url 'wagtailadmin_pages:history' page.id %}"
-            class="{{ nav_icon_button_classes }}"
-            aria-label="{% trans 'History' %}"
-            data-controller="w-tooltip"
-            data-w-tooltip-content-value="{% trans 'History' %}"
-            data-w-tooltip-offset-value="[0, 0]"
-        >
-            {% icon name="history" classname=nav_icon_classes %}
-        </a>
+           class="{{ nav_icon_button_classes }}"
+           aria-label="{% trans 'History' %}"
+           data-controller="w-tooltip"
+           data-w-tooltip-content-value="{% trans 'History' %}"
+           data-w-tooltip-offset-value="[0, 0]">{% icon name="history" classname=nav_icon_classes %}</a>
     {% endif %}
-
     {% include "wagtailadmin/shared/page_status_tag_new.html" with page=page_for_status %}
 {% endblock %}

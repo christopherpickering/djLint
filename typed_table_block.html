@@ -2,9 +2,7 @@
 <table>
     <thead>
         <tr>
-            {% for col in value.columns %}
-                <th scope="col">{{ col.heading }}</th>
-            {% endfor %}
+            {% for col in value.columns %}<th scope="col">{{ col.heading }}</th>{% endfor %}
         </tr>
     </thead>
     <tbody>

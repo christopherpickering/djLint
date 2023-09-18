@@ -1,13 +1,17 @@
 {% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
 {% load i18n %}
 {% load wagtailimages_tags wagtailadmin_tags %}
-{% block titletag %}{% blocktrans trimmed count counter=items|length %}Add tags to 1 document {% plural %}Add tags to {{ counter }} documents{% endblocktrans %}{% endblock %}
-
+{% block titletag %}
+    {% blocktrans trimmed count counter=items|length %}
+        Add tags to 1 document
+    {% plural %}
+        Add tags to {{ counter }} documents
+    {% endblocktrans %}
+{% endblock %}
 {% block header %}
     {% trans "Add tags to documents" as add_str %}
     {% include "wagtailadmin/shared/header.html" with title=add_str icon="doc-full-inverse" %}
 {% endblock header %}
-
 {% block items_with_access %}
     {% if items %}
         <p>
@@ -20,20 +24,22 @@
         <ul>
             {% for document in items %}
                 <li>
-                    <a href="{% url 'wagtaildocs:edit' document.item.id %}"  target="_blank" rel="noreferrer">{{document.item.title}}</a>
+                    <a href="{% url 'wagtaildocs:edit' document.item.id %}"
+                       target="_blank"
+                       rel="noreferrer">{{ document.item.title }}</a>
                 </li>
             {% endfor %}
         </ul>
     {% endif %}
 {% endblock items_with_access %}
-
 {% block items_with_no_access %}
-
-    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to add tags to this document{% plural %}You don't have permission to add tags to these documents{% endblocktrans %}
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}
+        You don't have permission to add tags to this document
+    {% plural %}
+        You don't have permission to add tags to these documents
+    {% endblocktrans %}
     {% include 'wagtaildocs/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
-
 {% endblock items_with_no_access %}
-
 {% block form_section %}
     {% if items %}
         {% trans 'Yes, add' as action_button_text %}

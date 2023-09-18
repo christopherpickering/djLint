@@ -2,7 +2,8 @@
 {% if url %}
     <a href="{{ url }}" class="{% classnames 'w-status' classname %}"{% if title %} title="{{ title }}" {% endif %}{% if attrs %} {{ attrs }}{% endif %}>
         {% if hidden_label %}
-            <span class="visuallyhidden">{{ hidden_label }}</span> {% if label %}{{ label }}{% endif %}
+            <span class="visuallyhidden">{{ hidden_label }}</span>
+            {% if label %}{{ label }}{% endif %}
         {% else %}
             {% if label %}{{ label }}{% endif %}
         {% endif %}

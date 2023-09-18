@@ -1,5 +1,4 @@
 {% load i18n wagtailadmin_tags %}
-
 <h2 role="alert">
     {% blocktrans trimmed count counter=pages.paginator.count %}
         There is {{ counter }} match
@@ -7,10 +6,8 @@
         There are {{ counter }} matches
     {% endblocktrans %}
 </h2>
-
 {% if pages %}
     {% component table %}
-
     {% url 'wagtailadmin_choose_page_search' as pagination_base_url %}
     {% paginate pages base_url=pagination_base_url classname="navigate-pages" %}
 {% endif %}

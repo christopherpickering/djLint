@@ -1,6 +1,5 @@
 {% extends "wagtailadmin/generic/listing_results.html" %}
 {% load i18n %}
-
 {% block results %}
     {% if is_searching or is_filtering %}
         <h2 role="alert">
@@ -13,7 +12,6 @@
     {% endif %}
     {{ block.super }}
 {% endblock %}
-
 {% block no_results_message %}
     {% if is_searching or is_filtering %}
         {% blocktrans trimmed with model_name=model_opts.verbose_name_plural asvar no_results_text %}
@@ -24,6 +22,5 @@
             There are no {{ model_name }} to display
         {% endblocktrans %}
     {% endif %}
-
     <p>{{ no_results_text|capfirst }}</p>
 {% endblock %}

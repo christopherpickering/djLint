@@ -1,14 +1,19 @@
 {% extends "wagtailadmin/base.html" %}
 {% load wagtailadmin_tags i18n %}
-{% block titletag %}{% blocktrans trimmed with title=parent_page.get_admin_display_title %}Exploring {{ title }}{% endblocktrans %}{% endblock %}
-{% block bodyclass %}page-explorer {% if ordering == 'ord' %}reordering{% endif %}{% endblock %}
-
+{% block titletag %}
+    {% blocktrans trimmed with title=parent_page.get_admin_display_title %}
+        Exploring {{ title }}
+    {% endblocktrans %}
+{% endblock %}
+{% block bodyclass %}
+    page-explorer
+    {% if ordering == 'ord' %}reordering{% endif %}
+{% endblock %}
 {% block content %}
     {% page_permissions parent_page as parent_page_perms %}
     {% include 'wagtailadmin/pages/page_listing_header.html' with title=parent_page.get_admin_display_title page_perms=parent_page_perms %}
     <form id="page-reorder-form">
         {% csrf_token %}
-
         {% if parent_page %}
             {% if parent_page.is_root %}
                 <div class="nice-padding">
@@ -58,9 +63,7 @@
                 </div>
             {% endif %}
         {% endif %}
-
         {% component table %}
-
         {% if is_paginated %}
             {% include "wagtailadmin/shared/pagination_nav.html" with items=page_obj linkurl=index_url %}
         {% endif %}
@@ -68,22 +71,17 @@
         {% include 'wagtailadmin/bulk_actions/footer.html' with select_all_obj_text=select_all_text app_label='wagtailcore' model_name='page' objects=pages %}
     </form>
 {% endblock %}
-
 {% block extra_js %}
     {{ block.super }}
-
     {% comment %} modal-workflow is required by the view restrictions interface {% endcomment %}
     <script src="{% versioned_static 'wagtailadmin/js/modal-workflow.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/privacy-switch.js' %}"></script>
-
     {% comment %}
     The first column will display checkboxes only if ordering is not being carried out, in which case
     that column will have the drag and drop buttons to enable ordering
     {% endcomment %}
     {% if not show_ordering_column %}
-        <script>
-            window.wagtailConfig.BULK_ACTION_ITEM_TYPE = 'PAGE';
-        </script>
+        <script>window.wagtailConfig.BULK_ACTION_ITEM_TYPE = 'PAGE';</script>
         <script defer src="{% versioned_static 'wagtailadmin/js/bulk-actions.js' %}"></script>
     {% endif %}
     <script type="text/javascript">

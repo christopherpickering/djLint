@@ -1,6 +1,8 @@
 {% load i18n %}
 <div class="overflow">
-    <table class="listing" data-controller="w-bulk" data-w-bulk-action-inactive-class="w-invisible">
+    <table class="listing"
+           data-controller="w-bulk"
+           data-w-bulk-action-inactive-class="w-invisible">
         <col />
         <col />
         <col />
@@ -11,10 +13,19 @@
                 </th>
             </tr>
             <tr>
-                <th><input type="checkbox" data-action="w-bulk#toggleAll" data-w-bulk-target="all" /></th>
+                <th>
+                    <input type="checkbox"
+                           data-action="w-bulk#toggleAll"
+                           data-w-bulk-target="all" />
+                </th>
                 {% for heading in data_headings %}
-                    <th id="{{ heading.name }}" class="{% if heading.order %}ordered icon {% if heading.order == 'ascending' %}icon-arrow-up-after{% else %}icon-arrow-down-after{% endif %}{% endif %}">
-                        {% if heading.order %}<a href="?order_by={% if heading.order == 'ascending' %}-{% endif %}{{ heading.name }}">{{ heading.label }}</a>{% else %}{{ heading.label }}{% endif %}
+                    <th id="{{ heading.name }}"
+                        class="{% if heading.order %}ordered icon {% if heading.order == 'ascending' %}icon-arrow-up-after{% else %}icon-arrow-down-after{% endif %}{% endif %}">
+                        {% if heading.order %}
+                            <a href="?order_by={% if heading.order == 'ascending' %}-{% endif %}{{ heading.name }}">{{ heading.label }}</a>
+                        {% else %}
+                            {{ heading.label }}
+                        {% endif %}
                     </th>
                 {% endfor %}
             </tr>
@@ -23,13 +34,14 @@
             {% for row in data_rows %}
                 <tr>
                     <td>
-                        <input type="checkbox" name="selected-submissions" class="select-submission" value="{{ row.model_id }}" data-action="w-bulk#toggle" data-w-bulk-target="item" />
+                        <input type="checkbox"
+                               name="selected-submissions"
+                               class="select-submission"
+                               value="{{ row.model_id }}"
+                               data-action="w-bulk#toggle"
+                               data-w-bulk-target="item" />
                     </td>
-                    {% for cell in row.fields %}
-                        <td>
-                            {{ cell }}
-                        </td>
-                    {% endfor %}
+                    {% for cell in row.fields %}<td>{{ cell }}</td>{% endfor %}
                 </tr>
             {% endfor %}
         </tbody>

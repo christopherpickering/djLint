@@ -1,5 +1,4 @@
 {% extends "wagtailadmin/generic/base.html" %}
-
 {% block extra_css %}
     {{ block.super }}
     <style>
@@ -11,7 +10,4 @@
         }
     </style>
 {% endblock %}
-
-{% block main_content %}
-    {{ calendar_html|safe }}
-{% endblock %}
+{% block main_content %}{{ calendar_html|safe }}{% endblock %}
