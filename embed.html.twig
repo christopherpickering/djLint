@@ -1,0 +1,35 @@
+{% extends '@bolt/_partials/fields/_base.html.twig' %}
+
+{% block field %}
+    <editor-embed
+        :embedapi='{{ path('bolt_async_embed')|json_encode }}'
+        :name='{{ name|json_encode }}'
+        :url='{{ field.get('url')|json_encode }}'
+        :width='{{ field.get('width')|json_encode }}'
+        :height='{{ field.get('height')|json_encode }}'
+        :title='{{ field.get('title')|e('js')|json_encode }}'
+        :authorname='{{ field.get('authorname')|e('js')|json_encode }}'
+        :authorurl='{{ field.get('authorurl')|json_encode }}'
+        :html='{{ field.get('html')|json_encode }}'
+        :thumbnail='{{ field.get('thumbnail')|json_encode }}'
+        :required='{{ required|json_encode }}'
+        :readonly='{{ readonly|json_encode }}'
+        :errormessage='{{ errormessage|json_encode }}'
+        :pattern='{{ pattern|json_encode }}'
+        :labels="{{ {
+            'content_url': 'editor_embed.content_url'|trans,
+            'placeholder_content_url': 'editor_embed.placeholder_content_url'|trans,
+            'label_height': 'editor_embed.label_height'|trans,
+            'label_pixel': 'editor_embed.label_pixel'|trans,
+            'label_matched_embed': 'editor_embed.label_matched_embed'|trans,
+            'label_preview': 'editor_embed.label_preview'|trans,
+            'label_size': 'editor_embed.label_size'|trans,
+            'delete': 'action.delete'|trans,
+            'refresh': 'action.refresh'|trans,
+            'field_width': 'field.width'|trans,
+            'field_height': 'field.height'|trans,
+            'field_title': 'field.title'|trans,
+            'field_author': 'field.author'|trans,
+        }|json_encode }}"
+    ></editor-embed>
+{% endblock %}

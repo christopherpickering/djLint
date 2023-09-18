@@ -1,0 +1,22 @@
+{% extends '@bolt/_base/layout.html.twig' %}
+{% import '@bolt/_macro/_macro.html.twig' as macro %}
+
+{% block title %}
+    {{ macro.icon('trash') }}
+    {{ 'caption.clear_cache'|trans }}
+{% endblock title %}
+
+{% block main %}
+
+    <pre style="font-family: monospace; border: 1px solid #BBB; background: #DDD; padding: 1rem; font-size: 0.8rem; line-height: 1.0rem;">
+        {{- output|trim -}}
+    </pre>
+
+    <div class="row">
+        <div class="col-md-9">
+            <a class="btn btn-primary"
+               href="{{ path('bolt_clear_cache') }}">{{ 'caption.clear_cache'|trans }}</a>
+        </div>
+    </div>
+
+{% endblock main %}

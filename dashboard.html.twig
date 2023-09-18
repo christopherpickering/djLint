@@ -1,0 +1,39 @@
+{% extends '@bolt/_base/layout.html.twig' %}
+{% import '@bolt/_macro/_macro.html.twig' as macro %}
+
+{# The 'title' and 'shoulder' blocks are the main heading of the page. #}
+{% block shoulder %}
+    {{ 'caption.dashboard'|trans }}
+{% endblock shoulder %}
+
+{% block title %}
+    {% if filter_value|default() %}
+        {{ macro.icon('search') }}
+        {{ 'title.filtered_by'|trans({'%filter%': filter_value})|raw }}
+    {% else %}
+        {{ macro.icon('tachometer-alt') }}
+        {{ config.get('general/sitename') }}
+    {% endif %}
+{% endblock title %}
+
+{# This 'topsection' gets output _before_ the main form, allowing `dump()`, without breaking Vue #}
+{% block topsection %}
+
+{% endblock %}
+
+{# The 'main' section is the main contents of the page. Usually this is Vue-ified. #}
+{% block main %}
+    {{ widgets('dashboard_below_header') }}
+    <div id="listing">
+        {% include '@bolt/_partials/_content_listing.html.twig' with {'records': records, 'type': 'dashboard' } %}
+    </div>
+    {{ widgets('dashboard_bottom') }}
+{% endblock %}
+
+{# The 'aside' section is the right sidebar of the page. If omitted, 'main' will take up the full width. #}
+{% block aside %}
+    {{ widgets('dashboard_aside_top') }}
+    {{ widgets('dashboard_aside_middle') }}
+    {{ widgets('dashboard_aside_bottom') }}
+{% endblock %}
+

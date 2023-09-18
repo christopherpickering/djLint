@@ -1,0 +1,24 @@
+{% extends '@bolt/_base/layout.html.twig' %}
+{% import '@bolt/_macro/_macro.html.twig' as macro %}
+
+{% block title %}{{ title|trans }}
+    {% if subtitle|default() %}» {{ subtitle|trans }} {% endif %}
+{% endblock title %}
+
+{% block main %}
+
+    <h2>{{ title|trans }}</h2>
+
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Torquatus, is qui consul
+        cum Cn. <strong>Tum ille timide</strong> vel potius verecunde: Facio, inquit. Quae sequuntur igitur?
+        Sunt enim prima <em>elementa naturae</em>, quibus auctis vírtutis quasi germen efficitur.
+        Omnis enim est natura diligens sui. Duo Reges: constructio interrete.
+        <code>Quid, de quo nulla dissensio est?</code> Sed nunc, quod agimus;
+    </p>
+
+{% endblock main %}
+
+{% block aside %}
+
+{% endblock %}

@@ -1,0 +1,163 @@
+{% import '_macro/_macro.html.twig' as macro %}
+
+{%- apply spaceless -%}
+
+{# This template fragment is used to "extend" the different fields, used in
+   Bolt's backend. Most of the values get passed in, either through a `Field`,
+   or otherwise through parameters.
+
+   The used variables are: ("P" is parameter, "F" comes from a `Field`)
+
+   - type: P - The type of the field
+   - variant: F - the "variant" of the field, if applicable
+   - name: P+F - The `name` attribute of the <input> field
+   - id: P+F - The `id` attribute of the <input> field
+   - class: P+F - The `class` attribute of the <input> field
+   - form: P - The `form` attribute of the <input>, defaults to 'editcontent'
+   - value: P+F - The default value if the <input> field
+   - label: P+F - Label used as visible anchor to the <input> field
+   - placeholder: P+F - Placeholder text to use in the <input>
+   - prefix: P+F - Short text to display as a prefix before a field
+   - postfix: P+F - Short text to display as a postfix after a field
+
+#}
+
+{# Set type #}
+{% set type = field.type|default %}
+
+{# Set required #}
+{% if not required|default %}
+    {% set required = (field.definition.required|default) ? true : false %}
+{% endif %}
+
+{# Set readonly based on field definition if not set already #}
+{% if readonly is not defined %}
+    {% set readonly = (field.definition.readonly|default) ? true : false %}
+{% endif %}
+
+{# Set error validation message #}
+{% set errormessage = field.definition.get('error')|default(false) %}
+
+{# Set pattern #}
+{% set pattern = field.definition.get('pattern')|default(false) %}
+
+{# Set maxlength #}
+{% set maxlength = field.definition.get('maxlength')|default('') %}
+
+{% set type_collection = (type in ['collection']) %}
+{% set type_card = (type in ['imagelist', 'filelist', 'set']) %}
+
+{# Set variant #}
+{% if not variant|default %}
+    {% set variant = field.definition.variant|default('normal') %}
+{% endif %}
+
+{# Set the name #}
+{% if not name|default %}
+    {%  set name = 'fields[' ~ field.name|default('unnamed') ~ ']' %}
+{% endif %}
+
+{# Set the separator #}
+{% if not separator|default %}
+    {% if field.definition.separator|default %}
+        {% set separator = "<hr>" %}
+    {% else %}
+        {% set separator = "" %}
+    {% endif %}
+{% endif %}
+
+{# Set the id #}
+{% if not id|default %}
+    {% set id = 'field-' ~ field.name|default(name)|default('unnamed') %}
+{% endif %}
+
+{# Set the form #}
+{% if not form|default %}
+    {% set form = 'editcontent' %}
+{% endif %}
+
+{# Do not fallback to a default value in the Editor. #}
+{% if field is defined %}
+    {% do field.setUseDefaultLocale(false)%}
+{% endif %}
+
+{# Set the value #}
+{% if not value|default %}
+    {% set value = field.value|default('') %}
+    {% if value is iterable and field|type != "select" and field|type != "collection" %}
+        {% set value = value|first %}
+    {% endif %}
+
+    {# We're adding zero width spaces (`\xE2\x80\x8B`) in `{{` and `}}`, to ensure Vue doesn't get its grubby paws on it. #}
+    {% if value is string %}
+        {% set value = value|replace({'{{': "{\xE2\x80\x8B{", '}}': "}\xE2\x80\x8B}" }) %}
+    {% endif %}
+
+    {# Set a default, for example when an extension requests `/bolt/new/entries?field-title=Foo+Bar #}
+    {% if not record.id|default() and not value %}
+        {% set value = app.request.get(id) %}
+    {% endif %}
+{% endif %}
+
+{# Set the class #}
+{% if not class|default %}
+    {% set class = field.definition.class|default %}
+{% endif %}
+
+{# Set the label #}
+{% if not label|default %}
+    {% set label = field.definition.label|default(field.name|default('unnamed')|ucwords) %}
+{% endif %}
+
+{# Set the info #}
+{% if not info|default %}
+    {% set info = field.definition.info|default %}
+{% endif %}
+
+{# Set the placeholder #}
+{% if not placeholder|default %}
+    {% set placeholder = field.definition.placeholder|default('') %}
+{% endif %}
+
+{# Set the locale #}
+{% set localize = field.definition.localize|default %}
+
+{%- endapply -%}
+
+<!-- field "{{ label }}" (type: {{ type }}{% if variant != 'normal' %}, variant: {{ variant }}{% endif %}) -->
+<div
+    class="{{ id in ['field-createdAt', 'field-modifiedAt', 'field-id'] ? 'mb-2' : 'mb-4'}} {{ type_card ? 'form-card' }} {{ type_collection ? 'form-collection' }} {{ in_compound|default ? 'in-compound'}} is-{{ variant }}"
+    id="field--{{ id }}"
+>
+
+{# Print prefix #}
+{% if field.definition['prefix']|default() is not empty %}
+    {{ macro.generatePrefix(field.definition['prefix']|default(), id) }}
+{% endif %}
+
+{% if variant == 'inline' %}<div class="row"><div class="col-3">{% endif %}
+
+{% block label %}
+    {% include '@bolt/_partials/fields/_label.html.twig' %}
+{% endblock %}
+
+{% if variant == 'inline' %}</div><div class="col-9">{% endif %}
+{% block field %}
+
+{% endblock %}
+{% if include_id is defined %}
+    {% include '@bolt/_partials/fields/_hidden_id_field.html.twig' %}
+{% endif %}
+
+{% if variant == 'inline' %}</div></div>{% endif %}
+
+{% block postfix %}
+    {# Print postfix #}
+    {% if field.definition['postfix']|default() is not empty %}
+        {{ macro.generatePostfix(field.definition['postfix']|default(), id) }}
+    {% endif %}
+{% endblock %}
+
+{{ separator|raw }}
+</div>
+

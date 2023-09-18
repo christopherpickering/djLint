@@ -1,0 +1,122 @@
+{# Button Macro with defaults #}
+{% macro icon(icon = 'question-circle') %}{% apply spaceless %}
+    {% set icon = icon|replace({'fa-': ''}) %}
+
+    <i class="fas fa-fw fa-{{ icon }}"></i>
+{% endapply %}{% endmacro %}
+
+{% macro button(label = 'Button', icon = 'question-circle', class = 'tertiary', attr = []) %}{% apply spaceless %}
+
+    {% set label = label|trans %}
+    {% set icon = icon|replace({'fa-': ''}) %}
+    {% set class = class|replace({'btn-': ''}) %}
+    {% set mb = 'mb-' in class ? '' : 'mb-3' %}
+    {% set attr = attr %}
+
+    <button class="btn btn-{{ class }} {{ mb }}"
+        {% for key,value in attr %} {{ key }}="{{value}}"{% endfor %}>
+        <i class="fas fa-fw fa-{{ icon }} me-2"></i>
+        {{- label -}}
+    </button>
+
+{% endapply %}{% endmacro %}
+
+{% macro buttonlink(label = 'Button', link = '', icon = 'question-circle', class = 'tertiary', attr = [], translate = true) %}{% apply spaceless %}
+
+    {% if translate %}
+        {% set label = label|trans %}
+    {% endif %}
+    {% set icon = icon|replace({'fa-': ''}) %}
+    {% set class = class|replace({'btn-': ''}) %}
+    {% set mb = 'mb-' in class ? '' : 'mb-3' %}
+    {% set attr = attr %}
+
+    <a href="{{ link }}" class="btn btn-{{ class|split(' ')|join(' btn-') }} text-nowrap {{ mb }}"
+        {% for key,value in attr %} {{ key }}="{{value}}"{% endfor %}>
+        <i class="fas fa-fw fa-{{ icon }} me-1"></i>
+        {{- label -}}
+    </a>
+
+{% endapply %}{% endmacro %}
+
+{% macro generate_collection_fields(collectionField, fields, record, compileTemplates) %}{% apply spaceless %}
+    {% set fieldsHtml = [] %}
+    {% for item_field in fields %}
+        {% set collectionItemName = 'collections[' ~ collectionField.name ~ '][' ~ item_field.definition.name ~ ']' %}
+        {# we create a 'dummy' hash from the current loop index, which is used to instantiate copies of collection item templates. #}
+        {# The order is also submitted in an order field, so that collection items may be stored in the given order in the database. #}
+        {% set hash = compileTemplates == true ? "{{ hash }}" : loop.index %}
+
+        {% set collectionItemName = collectionItemName ~ '[' ~ hash ~ ']' %}
+        {% set id = 'field-' ~ collectionField.name|default('unnamed') ~ '-' ~ item_field.name|default('unnamed') ~ '-' ~ hash %}
+        {% set new_field %}
+            {% set context = {
+                'field': item_field,
+                'id': id,
+                'in_compound': true,
+                'is_first': loop.index0 == 0,
+                'is_last': loop.index == fields|length,
+                'name': collectionItemName,
+                'compound_label': collectionField.definition.label,
+                'hash': hash,
+                'record': record
+            } %}
+
+            {% if item_field.type != 'set' %}
+                {% set context = context|merge({'include_id': true}) %}
+            {% endif %}
+
+            {% set includeLookup = [
+                '@bolt/_partials/fields/' ~ item_field.type ~ '.html.twig',
+                '@' ~ item_field.type ~ '/' ~ item_field.type ~ '.html.twig',
+                '@bolt/_partials/fields/generic.html.twig'
+            ] %}
+
+            <div>
+                {% include includeLookup with context only %}
+                <input type="hidden" name="collections[{{ collectionField.name }}][order][]" value="{{ hash }}" />
+            </div>
+        {% endset %}
+
+        {# Set the buttons #}
+        {% set buttons %}{% include '@bolt/_partials/fields/_collection_buttons.html.twig' with { in_compound: true, 'hash': hash } %}{% endset %}
+
+        {# Set the icon #}
+        {% set icon = item_field.definition.icon %}
+        {% if icon is empty%}{% set icon = 'fa-plus' %}{% endif %}
+
+        {# set the label manually as set in _base.html.twig, to pass to Collection.vue for templates #}
+        {% set label = item_field.definition.label|default(item_field.name|default('unnamed')|ucwords) %}
+        {% set fieldsHtml = fieldsHtml|merge([{'content': new_field, 'hash': hash, 'label': label, 'buttons': buttons, 'icon': icon}]) %}
+    {% endfor %}
+    {{ fieldsHtml|json_encode }}
+{% endapply %}{% endmacro %}
+
+
+{% macro relative_datetime(datetime) %}{% apply spaceless %}
+    <abbr class="datetime-relative" title="{{ datetime|localdate }}">
+        {{- datetime|date('c') -}}
+    </abbr>
+{% endapply %}{% endmacro %}
+
+{#
+ Variables
+    'prefix': Is the prefix string
+    'id':     Is a string
+#}
+{% macro generatePrefix(prefix, id) %}{% apply spaceless %}
+    {% if prefix and not (prefix starts with '<p' or prefix starts with '<span' or prefix starts with '<div') %}
+        <div id="{{ id ~ '_prefix' }}" class="form--helper">{{ prefix|markdown }}</div>
+    {% endif %}
+{% endapply %}{% endmacro %}
+
+{#
+ Variables
+    'postfix': Is the postfix string
+    'id':      Is a string
+#}
+{% macro generatePostfix(postfix, id) %}{% apply spaceless %}
+    {% if postfix and not (postfix starts with '<p' or postfix starts with '<span' or postfix starts with '<div') %}
+        <div id="{{ id ~ '_postfix' }}" class="form--helper">{{ postfix|markdown }}</div>
+    {% endif %}
+{% endapply %}{% endmacro %}

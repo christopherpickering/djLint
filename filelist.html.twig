@@ -1,0 +1,45 @@
+{% extends '@bolt/_partials/fields/_base.html.twig' %}
+
+{% set extensions = field.definition.get('extensions')|default('') %}
+{% set info %}
+    {{ 'upload.allow_file_types'|trans }}: <code>{{ extensions|join('</code>, <code>') }}</code><br>
+    {{ 'upload.max_size'|trans }}: {{ config.maxupload|format_bytes }}
+{% endset %}
+
+{% block field %}
+    {% if setPath is not defined %}
+        {% set setPath = field.definition.get('upload')|placeholders({'contenttype': record.contenttype}) %}
+    {% endif %}
+    {% set directory = path('bolt_async_upload', {'location': location|default('files'), 'path': setPath}) %}
+    {% set filelist = path('bolt_async_filelisting', {'location': location|default('files') }) %}
+    {% set labels = {
+        'button_upload': 'image.button_upload'|trans,
+        'button_upload_options': 'image.button_upload_options'|trans,
+        'button_from_library': 'image.button_from_library'|trans,
+        'placeholder_filename': 'image.placeholder_filename'|trans,
+        'placeholder_alt_text': 'image.placeholder_alt_text'|trans,
+        'placeholder_title': 'image.placeholder_title'|trans,
+        'button_remove': 'image.button_remove'|trans,
+        'button_move_up': 'image.button_up'|trans,
+        'button_move_down': 'image.button_down'|trans,
+        'add_new_file': 'file.add_new_file'|trans,
+        'button_edit_attributes': 'image.button_edit_attributes'|trans,
+        'modal_title_files': 'modal.title.file_field'|trans,
+        'modal_button_save': 'modal.button_save'|trans,
+        'modal_button_deny': 'modal.button_deny'|trans
+    }|json_encode %}
+    {% set limit = field.definition.get('limit')|default(200) %}
+
+    <editor-filelist
+        :files='{{ field.jsonvalue }}'
+        :name='{{ name|json_encode }}'
+        :directory='{{ directory|json_encode }}'
+        :filelist='{{ filelist|json_encode }}'
+        :csrf-token='{{ csrf_token('upload')|json_encode }}'
+        :labels='{{ labels }}'
+        :extensions='{{  extensions|json_encode }}'
+        :attributes-link='{{ path('bolt_media_new')|json_encode }}'
+        :limit='{{ limit|json_encode }}'
+        :readonly='{{ readonly|json_encode }}'
+    ></editor-filelist>
+{% endblock %}

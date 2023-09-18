@@ -1,0 +1,104 @@
+{% extends '@bolt/_base/layout.html.twig' %}
+{% import '@bolt/_macro/_macro.html.twig' as macro %}
+
+{# The 'title' and 'shoulder' blocks are the main heading of the page. #}
+{% block shoulder %}
+    {{ 'caption.about_bolt'|trans }}
+{% endblock shoulder %}
+
+{% block title %}
+    {{ macro.icon('award') }}
+    {{ 'caption.bolt_payoff'|trans }}
+{% endblock title %}
+
+{% block main %}
+
+    <h2>
+        Bolt {{ constant('Bolt\\Version::VERSION') }}
+        {% if constant('Bolt\\Version::CODENAME') %}<small> - {{ constant('Bolt\\Version::CODENAME') }}</small>{% endif %}
+    </h2>
+
+    <p><b>{{ 'about.system_info'|trans }}:</b></p>
+    <ul>
+        <li>Install type: <code>{{ installType }}</code></li>
+        <li>Database: <code>{{ platform.driver_name }} {{ platform.server_version }} <small> - {{ platform.connection_status }}</small> </code></li>
+        <li>PHP version: <code>{{ php }}</code></li>
+        <li>Symfony version: <code>{{ symfony }}</code></li>
+        <li>Operating system: <code>{{ os_name }} - <small>{{ os_version }}</small></code></li>
+        <li>Assets version: <code id="assetsVersion">-</code></li>
+        <li>File size upload limit: <code>{{ config.maxUpload|format_bytes }}</code>
+            <i data-bs-toggle="popover" data-bs-trigger="hover" title="" data-bs-html="true" data-bs-content="{{ config.maxUploadDescription|raw }}" class="fa fa-info-circle"></i>
+        </li>
+        <li>Memory limit: <code>{{ memory_limit }}</code></li>
+    </ul>
+    <hr>
+
+    <p>
+        Bolt is a CMS that strives to be simple, fast, straightforward and enjoyable to use. Both for
+        developers and content-editors. Bolt is Open Source, and as such it uses other Open Source
+        components. If you are a developer you're very welcome to help in the further development of Bolt.
+    </p>
+    <p>The ongoing Bolt development takes place under the care of:</p>
+    <ul>
+        <li><a href="https://twokings.nl/" target="_blank">Two Kings</a> &ndash; Artisinal Web Development.</li>
+    </ul>
+
+    <p>Sponsors:</p>
+    <ul>
+        <li><small>→ You and/or your company's name on this list? <a href="https://github.com/users/bobdenotter/sponsorship">Become a sponsor</a>.</small></li>
+    </ul>
+
+{# Previous collaborators / sponsors:
+        <li><a href="https://tsh.io/" target="_blank">The Software House</a> &ndash; Web and Mobile Development.</li>
+        <li><a href="https://www.webfwd.co.uk/" target="_blank">Webforward, Richard Leishman</a> </li>
+#}
+
+    <p>
+        All parts of Bolt are free to use under the open-source MIT license. The full licensing text can be
+        found here, in the included <a href="https://docs.bolt.cm/other/license">LICENSE.md</a>.
+    </p>
+
+    <p>
+        <a href="https://boltcms.io" class="btn btn-primary" target="_blank">
+            <i class="fa fa-external-link-square-alt"></i> {{ 'about.visit_bolt'|trans }}
+        </a>
+        <a href="https://docs.bolt.cm" class="btn btn-secondary" target="_blank">
+            <i class="fa fa-book"></i> {{ 'about.bolt_documentation'|trans }}
+        </a>
+        <a href="https://github.com/bolt" class="btn btn-secondary" target="_blank">
+            <i class="fa fa-external-link-square-alt"></i> {{ 'about.bolt_on_github'|trans }}
+        </a>
+    </p>
+
+    <h3>{{ 'about.used_libraries'|trans }}{#  #}</h3>
+
+    <p>{{ 'about.list_of_used_libraries'|trans }}{#  #}</p>
+
+    <ul>
+        <li>The awesome <a href="https://symfony.com/" target="_blank">Symfony 5, PHP framework</a> and a lot of the
+            <a href="https://symfony.com/components" target="_blank">Symfony components</a>.</li>
+        <li>The <a href="https://www.doctrine-project.org" target="_blank">Doctrine</a> library for database access, abstraction and object mapping.</li>
+        <li><a href="https://twig.sensiolabs.org/" target="_blank">Twig</a> - flexible, fast, and secure template engine.</li>
+        <li><a href="https://getbootstrap.com/" target="_blank">Bootstrap 4</a> and
+            <a href="https://fontawesome.com/" target="_blank">Font Awesome</a>.</li>
+        <li><a href="https://vuejs.org/" target="_blank">Vue</a> and VueX.</li>
+        <li><a href="https://codemirror.net/" target="_blank">CodeMirror</a>.</li>
+        <li><a href="https://webpack.js.org/" target="_blank">Webpack</a> and
+            <a href="https://symfony.com/doc/current/frontend/encore/installation.html" target="_blank">Symfony Encore</a>.</li>
+        <li><a href="https://api-platform.com/" target="_blank">API Platform</a>.</li>
+        <li><a href="https://phpunit.de/" target="_blank">PHPUnit</a>.</li>
+        <li><a href="http://www.phpspec.net/en/stable/" target="_blank">phpspec</a>.</li>
+        <li><a href="https://www.cypress.io/" target="_blank">Cypress</a>.</li>
+        <li><a href="https://github.com/coduo/php-matcher" target="_blank">PHP Matcher</a>.</li>
+        <li><a href="https://github.com/phpstan/phpstan" target="_blank">PHP Stan</a>.</li>
+        <li><a href="https://github.com/Symplify/EasyCodingStandard" target="_blank">Easy Coding Standard</a>.</li>
+        <li><a href="https://blackfire.io/" target="_blank">Blackfire</a>.</li>
+    </ul>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector('#assetsVersion').innerText =  window.assetsVersion;
+        });
+    </script>
+
+{% endblock main %}

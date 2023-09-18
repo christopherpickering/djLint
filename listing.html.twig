@@ -1,0 +1,229 @@
+{% extends '@bolt/_base/layout.html.twig' %}
+{% import '@bolt/_macro/_macro.html.twig' as macro %}
+
+{# The 'title' and 'shoulder' blocks are the main heading of the page. #}
+{% block shoulder %}
+    {{ title|trans }}
+{% endblock shoulder %}
+
+{% block title %}
+    {{ macro.icon('users') }} {{ subtitle|trans }}
+{% endblock %}
+
+{% block main %}
+
+    <table class="table" style="min-width: 100%; width: auto;">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col" class="text-nowrap">{{ 'listing.title_username'|trans }}</th>
+            <th scope="col" class="text-nowrap">{{ 'listing.title_display_name'|trans }} / {{ 'listing.title_email'|trans }}</th>
+            <th scope="col" class="text-nowrap">{{ 'listing.title_roles'|trans }}</th>
+            <th scope="col" class="text-nowrap">{{ 'listing.title_last_seen'|trans }}</th>
+            <th scope="col" class="text-nowrap">{{ 'listing.title_last_ip'|trans }}</th>
+            <th scope="col" class="text-nowrap">{{ 'listing.title_actions'|trans }}</th>
+
+        </tr>
+        </thead>
+    {% for iteratedUser in users %}
+        <tr>
+            <th scope="row">{{ iteratedUser.id }}</th>
+            <td>
+                {{ iteratedUser.username }}
+                {% if iteratedUser.status === 'disabled' %}<span class="badge bg-danger">{{ __('listing.disabled') }}</span>{% endif %}
+            </td>
+            <td>
+                {{ iteratedUser.displayName }} /
+                <small><a href="mailto:{{ iteratedUser.email }}" rel="noopener noreferrer" style="text-decoration: none">@</a></small>
+            </td>
+            <td>
+                <small><code>{{ iteratedUser.roles|join('</code>, <code>')|raw }}</code></small>
+            </td>
+            {% if iteratedUser.lastseenAt %}
+                <td>
+                    <small>{{ macro.relative_datetime(iteratedUser.lastseenAt) }}</small>
+                </td>
+            {% else %}
+                <td>
+                    <small>-</small>
+                </td>
+            {% endif %}
+            <td>
+                <small>
+                    {% if iteratedUser.lastIp %}<code>{{ iteratedUser.lastIp }}</code>{% else %}-{% endif %}
+                </small>
+            </td>
+            <td>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('title.options') }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        {% if is_granted('user:edit') %}
+                            <a class="dropdown-item" href="{{ path('bolt_user_edit', {'id': iteratedUser.id}) }}" target="_blank">
+                                <i class="fas fa-w fa-edit"></i> {{ __('action.edit') }}
+                            </a>
+                        {% endif %}
+                        {% if user.id != iteratedUser.id %}
+                            {% if is_granted('user:status') %}
+                                {% if iteratedUser.status !== 'disabled' %}
+                                    <a class="dropdown-item" href="{{ path('bolt_user_update_status', {'id': iteratedUser.id, '_csrf_token': csrf_token('useredit'), 'status': 'disabled'}) }}">
+                                        <i class="fas fa-w fa-ban"></i> {{ __('action.disable') }}
+                                    </a>
+                                {% endif %}
+                                {% if iteratedUser.status !== 'enabled' %}
+                                    <a class="dropdown-item" href="{{ path('bolt_user_update_status', {'id': iteratedUser.id, '_csrf_token': csrf_token('useredit'), 'status': 'enabled'}) }}">
+                                        <i class="fas fa-w fa-thumbs-up"></i> {{ __('action.enable') }}
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                            {% if is_granted('CAN_SWITCH_USER') %}
+                                <a class="dropdown-item" href="{{ path('bolt_dashboard', {'_switch_user': iteratedUser.username}) }}">
+                                    <i class="fas fa-w fa-user-shield"></i> {{ __('action.impersonate') }}
+                                </a>
+                            {% endif %}
+                            {% if is_granted('user:delete') %}
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item btn-hidden-danger"
+                                   href="{{ path('bolt_user_delete', {'id': iteratedUser.id, '_csrf_token': csrf_token('useredit')}) }}"
+                                   data-modal-title="{{ 'action.confirm_delete'|trans }}"
+                                   data-modal-body="{{ 'action.confirm_delete'|trans }}"
+                                   data-modal-button-deny="Cancel"
+                                   data-modal-button-accept="OK"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#resourcesModal"
+                                >
+                                    <i class="fas fa-w fa-trash"></i> {{ __('action.delete') }}
+                                </a>
+                            {% endif %}
+                        {%  endif %}
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <p class="buttons">
+        {% if is_granted('user:add') %}
+            {{ macro.buttonlink('action.add_user', path('bolt_user_add'), 'user-plus', 'secondary') }}
+        {% endif %}
+        {% if is_granted('user:add') %}
+            {{ macro.buttonlink('action.edit_permissions', path('bolt_file_edit', {'location': 'config',
+                'file': '/bolt/permissions.yaml'}), 'user-cog', 'tertiary') }}
+        {% endif %}
+    </p>
+
+    <h3>{{ 'listing.current_sessions_header'|trans }}</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col" class="text-nowrap">{{ 'listing.title_username'|trans }}</th>
+                <th scope="col" class="text-nowrap">{{ 'listing.title_last_seen'|trans }}</th>
+                <th scope="col" class="text-nowrap">{{ 'listing.title_session_expires'|trans }}</th>
+                <th scope="col" class="text-nowrap">{{ 'listing.title_ip_address'|trans }}</th>
+                <th scope="col" class="text-nowrap">{{ 'listing.title_browser'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for iteratedUser in users %}
+                {% for authtoken in iteratedUser.userAuthTokens %}
+                    <tr>
+                        <td class="text-nowrap">{{ iteratedUser.id }}</td>
+                        <td class="text-nowrap">{{ iteratedUser.username }}</td>
+                        <td>
+                            {{ macro.relative_datetime(iteratedUser.lastseenAt) }}
+                        </td>
+                        <td>
+                            {{ macro.relative_datetime(authtoken.validity) }}
+                        </td>
+                        <td class="text-nowrap"><code>{{ iteratedUser.lastIp|default('-') }}</code></td>
+                        <td>{{ authtoken.useragent|default('-') }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {{ pager(users, template = '@bolt/helpers/_pager_bootstrap.html.twig', class="justify-content-center") }}
+
+{% endblock %}
+
+
+{# The 'aside' section is the right sidebar of the page. If omitted, 'main' will take up the full width. #}
+{% block aside %}
+    {{ widgets('users_aside_top') }}
+
+    {% if config.get('general/user_show_sort&filter') %}
+        {% set filterOptions = {
+            'id': "id",
+            'displayName': "displayName",
+            'username': "username",
+            'roles': "roles",
+            'lastseenAt': "lastseenAt",
+            'lastIp': "lastIp"
+        } %}
+
+        <div class="card mb-3">
+            <div class="card-header">
+                {{ macro.icon('star') }} {{ title|trans }}
+            </div>
+            <div class="card-body">
+                <p>
+                    {% if is_granted('user:add') %}
+                    <a class="btn btn-secondary" href="{{ path('bolt_user_add') }}" data-patience="virtue">
+                        {{ macro.icon('user-plus') }} {{ __('action.add_user') }}
+                    </a>
+                    <a
+                        class="btn btn-tertiary"
+                        href="{{ path('bolt_file_edit', {'location': 'config', 'file': '/bolt/permissions.yaml'}) }}"
+                        data-patience="virtue"
+                    >
+                        {{ macro.icon('user-cog') }} {{ __('action.edit_permissions') }}
+                    </a>
+                    {% endif %}
+                </p>
+                <form>
+                    <div class="form-group">
+                        <p>
+                            <strong>{{ 'listing.title_sortby'|trans }}</strong>:
+                            <select class="form-control" name="sortBy" title="{{ 'listing.title_sortby'|trans }}">
+                                <option value="" {% if sortBy is empty %}selected{% endif %}>
+                                    {{ 'listing.option_select_sortby'|trans }}
+                                </option>
+                                {% for key, filterOption in filterOptions %}
+                                    <option value="{{ key }}" {% if sortBy == key %}selected{% endif %}>
+                                        {{ filterOption }}
+                                    </option>
+                                    <option value="-{{ key }}" {% if sortBy == '-' ~ key %}selected{% endif %}>
+                                        -{{ filterOption }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </p>
+
+                        <p>
+                            <strong>{{ 'listing.title_filterby'|trans }}</strong>:
+                            <input
+                                class="form-control"
+                                type="text"
+                                name="filter"
+                                id="content-filter"
+                                value="{{ filterValue }}"
+                                placeholder="{{ 'listing.placeholder_filter'|trans }}"
+                                title="{{ 'listing.placeholder_filter'|trans }}"
+                            />
+                        </p>
+                    </div>
+
+                    {{ macro.button('listing.button_filter', 'filter', 'secondary mb-0', {'type': 'submit'}) }}
+
+                    {% if sortBy is not empty or filterValue is not empty %}
+                        {{ macro.buttonlink('listing.button_clear', path('bolt_users'),  'times', 'tertiary mb-0') }}
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

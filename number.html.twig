@@ -1,0 +1,29 @@
+{% extends '@bolt/_partials/fields/_base.html.twig' %}
+
+{% block field %}
+
+  {% set min = field.definition.min %}
+  {% set max = field.definition.max %}
+  {% set mode = field.definition.mode|default('float') %}
+  {% set step = field.definition['step']|default(1) %}
+
+  {# --- if the mode is `float` and `step` is not set, use the magical 'any' --- #}
+  {% if mode == 'float' %}
+    {% set step = field.definition['step']|default("'any'") %}
+  {% endif %}
+
+  <editor-number
+    :id='{{ id|json_encode }}'
+    name="{{ name }}"
+    value="{{ value }}"
+    :step="{{ step|raw }}"
+    :min="{{ min }}"
+    :max="{{ max }}"
+    :required="{{ required|json_encode }}"
+    :readonly="{{ readonly|json_encode }}"
+    :errormessage="{{ errormessage|json_encode }}"
+    :pattern="{{ pattern|json_encode }}"
+    :placeholder="{{ placeholder|json_encode }}"
+  ></editor-number>
+
+{% endblock %}

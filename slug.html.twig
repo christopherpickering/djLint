@@ -1,0 +1,25 @@
+{% extends '@bolt/_partials/fields/_base.html.twig' %}
+
+{% block field %}
+{% set prefix = '/' ~ record.definition.singular_slug ~ '/' %}
+    {% set isnew = field.new or field.content.id === 0 %}
+    <editor-slug
+        :value='{{ value|json_encode }}'
+        :name='{{ name|json_encode }}'
+        :prefix='{{ prefix|json_encode }}'
+        :field-class='{{ class|json_encode }}'
+        :required='{{ required|json_encode }}'
+        :readonly='{{ readonly|json_encode }}'
+        :generate='{{ field.definition.uses|join(',')|json_encode }}'
+        :errormessage='{{ errormessage|json_encode }}'
+        :pattern='{{ pattern|json_encode }}'
+        :labels='{{ {
+            'button_unlocked': 'slug.button_unlocked'|trans,
+            'button_locked': 'slug.button_locked'|trans,
+            'button_edit': 'slug.button_edit'|trans,
+            'generate_from': 'slug.generate_from'|trans,
+        }|json_encode }}'
+        :localize='{{ field.definition.localize|json_encode }}'
+        :is-new='{{ isnew|json_encode }}'
+    ></editor-slug>
+{% endblock %}

@@ -1,0 +1,51 @@
+<div class="row" id="files-cards">
+    {% for file in finder %}
+
+        {% set extension = file.extension() %}
+        {% set filename = path ~ file.getRelativePathname() %}
+        {% set icon = 'fa-file' %}
+        {% set link = path('bolt_file_edit', {'location': location.key, 'file': filename }) %}
+        {% set thumbnail = '' %}
+        {% set title = '' %}
+        {% set dimensions = '' %}
+        {% set original = asset((path != '/' ? path|trim('/') ~ '/') ~ file.filename, 'files') %}
+
+        {% if extension in imageformats %}
+            {% set thumbnail = filename|thumbnail(width = 400, height = 300, location = location.key, fit = 'crop') %}
+            {% set icon = 'fa-image' %}
+            {% set link = path('bolt_media_new', {'location': location.key, 'file': filename}) %}
+
+            {% for image in media|default([]) %}
+                {% if image.filename in filename %}
+                    {% set title = image.title %}
+                    {% set dimensions = image.width ~ ' × ' ~ image.height ~ 'px' %}
+                    {% set link = path('bolt_media_edit', {'id': image.id}) %}
+                {% endif %}
+            {% endfor %}
+
+        {% endif %}
+
+    <div class="col-6 col-sm-4 col-xl-3 pe-0 pb-3">
+        <div class="card">
+            {%- if thumbnail -%}
+                <a class="lightbox" href="{{ filename|thumbnail(width = 1000, height = 1000, location = location.key) }}">
+                    <img class="card-img-top" src="{{ thumbnail }}" loading="lazy">
+                </a>
+            {% else %}
+                <img class="card-img-top text" src="{{ asset('assets/images/placeholder.png', 'public') }}" loading="lazy">
+            {%- endif -%}
+
+            <div class="card-body p-2">
+                <a href="{{ link }}" class="text-decoration-none" style="font-size: 85%;">{{ file.getRelativePathname|excerpt(15) }}</a>
+
+                {% include '@bolt/finder/_files_actions.html.twig' %}
+            </div>
+
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <p><strong>{{ 'files_cards.message_no_files'|trans }}</strong></p>
+    </div>
+    {% endfor %}
+</div>

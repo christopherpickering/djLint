@@ -1,0 +1,47 @@
+{% extends '@bolt/_partials/fields/_base.html.twig' %}
+
+{# On top of the attributes that get set/defined in `_base.html.twig`,
+   The Select fields has three additional attributes:
+
+     - options: The actual options that are available in the select
+     - multiple: A boolean to set whether or not we allow multiple selections
+ #}
+
+{% block label %}
+    {% if not hideLabel|default(false) %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% if options is not defined %}
+    {% set options = select_options(field) %}
+{% endif %}
+
+{% if multiple is not defined %}
+    {% set multiple = field.definition.get('multiple')|default ? 'true' : 'false' %}
+{% endif %}
+
+{% if autocomplete is not defined %}
+	{% set autocomplete = field.definition.get('autocomplete')|default ? 'true' : 'false' %}
+{% endif %}
+
+{% if limit is not defined %}
+	{% set limit = field.definition.get('limit')|default(2000) %}
+{% endif %}
+
+{% block field %}
+    <editor-select
+        :classname="{{ ['wide-options ', class]|join|json_encode }}"
+        :value="{{ value|json_encode }}"
+        :name='{{ name|json_encode }}'
+        :id='{{ id|json_encode }}'
+        :options="{{ options|json_encode }}"
+        :optionslimit="{{ limit }}"
+        :form='{{ form|json_encode }}'
+        :multiple="{{ multiple }}"
+        :autocomplete="{{ autocomplete }}"
+        :readonly="{{ readonly|json_encode }}"
+        :errormessage='{{ errormessage|json_encode }}'
+        :required='{{ required|json_encode }}'
+    ></editor-select>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends '@bolt/_partials/fields/_base.html.twig' %}
+{% import '@bolt/_macro/_macro.html.twig' as macro %}
+
+{% block field %}
+  {# check disabled #}
+  {% if readonly is not defined %}
+      {% set readonly = false %}
+  {% endif %}
+  {# Check form attribute #}
+  {% if form is not defined %}
+      {% set form = '' %}
+  {% endif %}
+  {# for timestamps, make sure it's formatted correctly #}
+  {% if value.timestamp is defined %}
+      {% set value = value|date(format='c') %}
+  {% endif %}
+  {# set mode #}
+  {% if mode is not defined %}
+      {% set mode = field.definition.mode|default(false) %}
+  {% endif %}
+  {# check if we only want the value: valueonly #}
+  {% if valueonly is not defined %}
+      {% set valueonly = false %}
+  {% endif %}
+
+  {% if not valueonly %}
+      {# Ensure we use only locales bundled with Flatflicker, otherwise default to 'en' #}
+      {% set locale = app.user.locale|split('_')|first %}
+      {% if not locale in 'ar|at|az|be|bg|bn|bs|cs|cy|da|de|eo|es|et|fa|fi|fo|fr|ga|gr|he|hi|hr|hu|id|is|it|ja|ka|km|ko|kz|lt|lv|mk|mn|ms|my|nl|no|pa|pl|pt|ro|ru|si|sk|sl|sq|sr|sv|th|tr|uk|uz|vn|zh'|split('|') %}
+          {% set locale = 'en' %}
+      {% endif %}
+  <editor-date
+    :value='{{ value|json_encode }}'
+    name='{{ name }}'
+    :readonly='{{ readonly|json_encode }}'
+    form='{{ form }}'
+    mode='{{ mode }}'
+    locale='{{locale}}'
+    labels='{{ { 'toggle': 'editor_date.toggle'|trans }|json_encode }}'
+    :required='{{ required|json_encode }}'
+    :errormessage='{{ errormessage|json_encode }}'
+  ></editor-date>
+  {% else %}
+    {{ value|localdate(format|default(null), locale|default(null)) }}
+      <small>({{ macro.relative_datetime(value) }})</small>
+  {% endif %}
+
+{% endblock %}
+

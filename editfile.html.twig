@@ -1,0 +1,53 @@
+{% extends '@bolt/_base/layout.html.twig' %}
+{% import '@bolt/_macro/_macro.html.twig' as macro %}
+
+{% set extension = file|split('.')|last %}
+{% set modes = {
+    'md': 'markdown',
+    'markdown': 'markdown',
+    'htm': 'html',
+    'html': 'html',
+    'yml': 'yaml',
+    'yaml': 'yaml',
+    'twig': 'twig',
+    'css': 'css',
+    'js': 'javascript',
+    'php': 'php'
+} %}
+{% set mode = modes[extension]|default('') %}
+
+{# The 'title' and 'shoulder' blocks are the main heading of the page. #}
+{% block shoulder %}
+    {{ 'caption.edit_file'|trans }}
+{% endblock shoulder %}
+
+{% block title %}
+    {{ macro.icon('file-code') }}
+    {{ 'caption.path'|trans }}: <code>{{ location }}/<strong>{{ file|split('/')|last}}</strong></code>
+{% endblock %}
+
+{% block main %}
+    <form method="post">
+        <input type="hidden" name="file" value="{{ file }}">
+        <input type="hidden" name="location" value="{{ location }}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('editfile') }}">
+        <div class="form-group">
+            <textarea title="undefined" name="editfile" id="editfile_textarea">{{ contents }}</textarea>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" name="save" type="submit" {% if not writable %}disabled{% endif %}>{{ macro.icon('save') }}{{ 'action.save'|trans }}</button>
+            {% if not writable %}{{ __('editfile.target_not_writable') }}{% endif %}
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    var editfile_textarea = document.getElementById('editfile_textarea');
+    var myCodeMirror = CodeMirror.fromTextArea(editfile_textarea, {
+        lineNumbers: true,
+        mode: '{{ mode }}'
+    });
+</script>
+{% endblock %}

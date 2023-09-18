@@ -1,0 +1,32 @@
+{% import '@bolt/_macro/_macro.html.twig' as macro %}
+{% set info %}
+    {{ 'upload.allow_file_types'|trans }}: <code>{{ config.get('general/accept_file_types')|join('</code>, <code>') }}</code><br>
+    {{ 'upload.max_size'|trans }}: {{ config.maxupload|format_bytes }}
+{% endset %}
+
+<div class="card mb-4">
+    <div class="card-header">{{ 'caption.file_uploader'|trans }}
+        <i data-bs-toggle="popover" data-bs-trigger="hover" title="" data-bs-html="true" data-bs-content="{{ info }}" class="fa fa-info-circle"></i>
+    </div>
+
+    <form class="dropzone editor__image--dropzone" id="dropzone"
+          action="{{ path('bolt_async_upload', {'location': location.key, 'path': path}) }}"
+          method="POST">
+        {{ macro.icon('upload') }}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('upload') }}">
+        <div class="dz-default dz-message"><span>{{ 'caption.file_upload.upload_text'|trans }}</span></div>
+        <div class="fallback">
+            <input name="file" type="file" multiple />
+        </div>
+    </form>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Dropzone.options.dropzone = {
+                maxFilesize: "{{ config.maxupload / (1024*1024) }}", // MB
+                acceptedFiles: ".{{ config.get('general/accept_file_types')|join(',.') }}",
+            };
+        });
+    </script>
+</div>
+
+
