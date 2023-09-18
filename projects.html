@@ -6,8 +6,9 @@
   <hr>
   <ul>
     {% for project in this.children %}
-      <li><a href="{{ project|url }}">{{ project.name }}</a>
+      <li>
+        <a href="{{ project|url }}">{{ project.name }}</a>
         — {{ project.tagline }}
-    {% endfor %}
-  </ul>
-{% endblock %}
+      {% endfor %}
+    </ul>
+  {% endblock %}
